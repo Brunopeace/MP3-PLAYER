@@ -8,6 +8,44 @@ if ('serviceWorker' in navigator) {
         });
 }
 
+
+
+
+
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Previne o navegador de exibir o prompt de instalação automaticamente
+    e.preventDefault();
+    // Salva o evento para ser acionado mais tarde
+    deferredPrompt = e;
+    // Exibe o botão de instalação
+    const installButton = document.getElementById('install-button');
+    installButton.style.display = 'block';
+
+    installButton.addEventListener('click', () => {
+        // Oculta o botão
+        installButton.style.display = 'none';
+        // Exibe o prompt de instalação
+        deferredPrompt.prompt();
+        // Espera pela resposta do usuário
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('Usuário aceitou a instalação do PWA');
+            } else {
+                console.log('Usuário rejeitou a instalação do PWA');
+            }
+            deferredPrompt = null;
+        });
+    });
+});
+
+
+
+
+
+
+
 const audio = document.getElementById('audio');
 const playButton = document.getElementById('play');
 const prevButton = document.getElementById('prev');
